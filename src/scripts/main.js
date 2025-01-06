@@ -1,44 +1,42 @@
 'use strict';
 
+const wall = document.querySelector('.wall');
+const spider = document.querySelector('.spider');
+
 document.addEventListener('click', (e) => {
-  const spider = document.querySelector('.spider');
-  const spiderState = {
-    x: 0,
-    y: 0,
-    element: spider,
-  };
-
-  const wall = document.querySelector('.wall');
+  // write code here
   const wallRect = wall.getBoundingClientRect();
-  const spiderWidth = spider.offsetWidth;
-  const spiderHeight = spider.offsetHeight;
+  const spiderRect = spider.getBoundingClientRect();
+  const x = e.clientX;
+  const y = e.clientY;
 
-  if (
-    e.clientX >= wallRect.left &&
-    e.clientX <= wallRect.right &&
-    e.clientY >= wallRect.top &&
-    e.clientY <= wallRect.bottom
-  ) {
-    spiderState.x = e.clientX - wallRect.left - (spiderWidth / 2 + 8);
-    spiderState.y = e.clientY - wallRect.top - (spiderHeight / 2 + 12);
+  const wallField = e.target.closest('.wall');
 
-    if (spiderState.x < 0) {
-      spiderState.x = 0;
-    }
-
-    if (spiderState.y < 0) {
-      spiderState.y = 0;
-    }
-
-    if (spiderState.x > wallRect.width - spiderWidth) {
-      spiderState.x = wallRect.width - spiderWidth;
-    }
-
-    if (spiderState.y > wallRect.height - spiderHeight) {
-      spiderState.y = wallRect.height - spiderHeight;
-    }
-
-    spider.style.left = `${spiderState.x}px`;
-    spider.style.top = `${spiderState.y}px`;
+  if (!wallField) {
+    return;
   }
+
+  let leftSpider = x - wallRect.left - spiderRect.width / 2 - wall.clientLeft;
+  let topSpider = y - wallRect.top - spiderRect.height / 2 - wall.clientTop;
+  const topMax = wall.clientHeight - spider.clientHeight;
+  const leftMax = wall.clientWidth - spider.clientWidth;
+
+  if (topSpider < 0) {
+    topSpider = 0;
+  }
+
+  if (topSpider > topMax) {
+    topSpider = topMax;
+  }
+
+  if (leftSpider < 0) {
+    leftSpider = 0;
+  }
+
+  if (leftSpider > leftMax) {
+    leftSpider = leftMax;
+  }
+
+  spider.style.left = leftSpider + 'px';
+  spider.style.top = topSpider + 'px';
 });
